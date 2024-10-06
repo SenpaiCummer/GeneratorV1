@@ -1,0 +1,128 @@
+<html>
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+</head>
+<body class="flex flex-col items-center h-screen bg-white">
+    <div class="flex space-x-4 mb-4">
+        <button class="bg-black text-white py-2 px-4 rounded-full" onclick="showCardGen()">Card Gen</button>
+        <button class="bg-black text-white py-2 px-4 rounded-full" onclick="showAddressGen()">Address Gen</button>
+    </div>
+    <div id="card-gen" class="flex space-x-10">
+        <div class="space-y-4">
+            <div class="flex items-center space-x-2">
+                <label class="text-lg" for="name">Name:</label>
+                <input class="border border-black p-1" id="name" type="text"/>
+            </div>
+            <div class="flex items-center space-x-2">
+                <label class="text-lg" for="name2">Name2:</label>
+                <input class="border border-black p-1" id="name2" type="text"/>
+            </div>
+            <div class="flex items-center space-x-2">
+                <input class="border border-black" id="visa" name="payment" type="radio"/>
+                <label for="visa">
+                    <img alt="VISA logo" height="20" src="https://storage.googleapis.com/a1aa/image/v174k40sePTGCShdLdf8GoilZkYQIVD35fVvCmyEebzsgZQOB.jpg" width="40"/>
+                </label>
+                <input class="border border-black" id="mastercard" name="payment" type="radio"/>
+                <label for="mastercard">
+                    <img alt="Mastercard logo" height="20" src="https://storage.googleapis.com/a1aa/image/02jBlHZUeqwTLqkrhOlefBf7gScHFiJDvEsYcVq9gcGzgZQOB.jpg" width="40"/>
+                </label>
+            </div>
+            <button class="bg-black text-white py-2 px-4 rounded-full" onclick="generateCard()">Generate</button>
+        </div>
+        <div id="results" class="bg-black text-white w-64 h-96 rounded-lg flex items-center justify-center">
+            Results
+        </div>
+    </div>
+    <div id="address-gen" class="hidden flex space-x-10">
+        <div class="space-y-4">
+            <div class="flex items-center space-x-2">
+                <label class="text-lg" for="country">Country:</label>
+                <select class="border border-black p-1" id="country">
+                    <option value="usa">USA</option>
+                    <option value="germany">Germany</option>
+                    <option value="canada">Canada</option>
+                    <option value="russia">Russia</option>
+                </select>
+            </div>
+            <button class="bg-black text-white py-2 px-4 rounded-full" onclick="generateAddress()">Generate</button>
+        </div>
+        <div id="address-results" class="bg-black text-white w-64 h-96 rounded-lg flex items-center justify-center">
+            Results
+        </div>
+    </div>
+
+    <script>
+        function showCardGen() {
+            document.getElementById('card-gen').classList.remove('hidden');
+            document.getElementById('address-gen').classList.add('hidden');
+        }
+
+        function showAddressGen() {
+            document.getElementById('card-gen').classList.add('hidden');
+            document.getElementById('address-gen').classList.remove('hidden');
+        }
+
+        function generateCard() {
+            const name = document.getElementById('name').value;
+            const name2 = document.getElementById('name2').value;
+            const cardNumber = Array.from({ length: 16 }, () => Math.floor(Math.random() * 10)).join('');
+            const cvv = Math.floor(100 + Math.random() * 900);
+            const expireMonth = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');
+            const expireYear = String(Math.floor(Math.random() * 5) + 23).padStart(2, '0');
+            const expireDate = `${expireMonth}/${expireYear}`;
+
+            const resultDiv = document.getElementById('results');
+            resultDiv.innerHTML = `
+                <div class="text-center">
+                    <p>${name} ${name2}</p>
+                    <p>${cardNumber}</p>
+                    <p>CVV: ${cvv}</p>
+                    <p>Expires: ${expireDate}</p>
+                </div>
+            `;
+        }
+
+        function generateAddress() {
+            const country = document.getElementById('country').value;
+            let street, city, state, zip;
+
+            if (country === 'usa') {
+                street = ["123 Main St", "456 Elm St", "789 Oak St"];
+                city = ["Springfield", "Rivertown", "Lakeside"];
+                state = ["CA", "NY", "TX"];
+                zip = ["90210", "10001", "73301"];
+            } else if (country === 'germany') {
+                street = ["Hauptstrasse 1", "Bahnhofstrasse 2", "Gartenstrasse 3"];
+                city = ["Berlin", "Munich", "Frankfurt"];
+                state = ["BE", "BY", "HE"];
+                zip = ["10115", "80331", "60311"];
+            } else if (country === 'canada') {
+                street = ["123 Maple St", "456 Oak St", "789 Pine St"];
+                city = ["Toronto", "Vancouver", "Montreal"];
+                state = ["ON", "BC", "QC"];
+                zip = ["M5H 2N2", "V5K 0A1", "H2Y 1C6"];
+            } else if (country === 'russia') {
+                street = ["ул. Ленина, 1", "ул. Пушкина, 2", "ул. Гагарина, 3"];
+                city = ["Moscow", "Saint Petersburg", "Novosibirsk"];
+                state = ["MOW", "SPE", "NVS"];
+                zip = ["101000", "190000", "630000"];
+            }
+
+            const selectedStreet = street[Math.floor(Math.random() * street.length)];
+            const selectedCity = city[Math.floor(Math.random() * city.length)];
+            const selectedState = state[Math.floor(Math.random() * state.length)];
+            const selectedZip = zip[Math.floor(Math.random() * zip.length)];
+
+            const resultDiv = document.getElementById('address-results');
+            resultDiv.innerHTML = `
+                <div class="text-center">
+                    <p>${selectedStreet}</p>
+                    <p>${selectedCity}, ${selectedState} ${selectedZip}</p>
+                    <p>${country.charAt(0).toUpperCase() + country.slice(1)}</p>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
